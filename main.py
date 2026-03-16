@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 
 # कॉन्फिगरेशन
-BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"  # Replace with your actual token
+BOT_TOKEN = "Y8672499858:AAGPtzFcwe8kF72Ge7lzRuDXZFDWiXfMXCA"  # Replace with your actual token
 GAME_WEBAPP_URL = "https://lcrscan.com/winiGame/"
 API_KEY = "699c31f616cf06eec2a4d053"
 
