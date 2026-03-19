@@ -17,6 +17,17 @@ logger = logging.getLogger(__name__)
 # डेटा फ़ाइल
 DATA_FILE = "user_data.json"
 
+class UserData:
+    def __init__(self, user_id, username, referred_by=None):
+        self.user_id = user_id
+        self.username = username
+        self.balance = 1
+        self.games_played = 0
+        self.joined_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.referred_by = referred_by
+        self.referral_count = 0
+        self.referral_earnings = 0
+
 def load_data():
     """लोड यूजर डेटा फ़ाइल से"""
     try:
@@ -68,16 +79,55 @@ def save_data(users):
 # यूजर डेटा लोड करें
 users_data = load_data()
 
-class UserData:
-    def __init__(self, user_id, username, referred_by=None):
-        self.user_id = user_id
-        self.username = username
-        self.balance = 1
-        self.games_played = 0
-        self.joined_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.referred_by = referred_by
-        self.referral_count = 0
-        self.referral_earnings = 0
+def get_announcement_message():
+    """बड़े announcement message को return करें"""
+    return (
+        f"**🚀 BIG ANNOUNCEMENT: WINI HOLDER REWARDS ARE HERE! 🚀**\n\n"
+        f"Hello Wini Family! 👋\n\n"
+        f"Get ready for the most exciting update yet! We are revolutionizing the way you earn. It’s not just about playing anymore; it’s about **HOLDING and EARNING passively!** 💰\n\n"
+        f"We are thrilled to introduce the new **WINI Token Holder Benefit Program.** If you hold $WINI, you hold the golden ticket! 🎫\n\n"
+        f"---\n\n"
+        f"**🎁 THE ULTIMATE REWARD MECHANISM**\n\n"
+        f"Every 15 days, we are distributing a massive **5% to 20%** of the **Total Trading Volume** from Wini Games directly back to YOU—the token holders! 🤯\n\n"
+        f"✅ **The Bigger the Volume, The Bigger the Reward!**\n"
+        f"✅ **Passive Income, Just for Holding!**\n"
+        f"✅ **Bi-Weekly Payouts!**\n\n"
+        f"---\n\n"
+        f"**⚙️ HOW DOES IT WORK? (Simple Math, Big Rewards)**\n\n"
+        f"We believe in rewarding loyalty. The system is simple and transparent:\n\n"
+        f"**1️⃣ THE SNAPSHOT 📸**\n"
+        f"We will take a **regular holding check every 15 days.** This snapshot determines how many $WINI tokens you hold in your wallet.\n\n"
+        f"**2️⃣ THE CALCULATION 🧠**\n"
+        f"Your share of the reward pool depends entirely on **your percentage of the total holdings.**\n"
+        f"*Formula:* (Your Tokens / Total Tokens in Circulation) = Your Share %\n\n"
+        f"**3️⃣ THE DISTRIBUTION 💸**\n"
+        f"The 5% to 20% volume reward is split among all holders based on that percentage.\n"
+        f"*Meaning:* **The more you hold, the more you earn!** If you hold 1% of all tokens, you get 1% of that massive reward pool.\n\n"
+        f"---\n\n"
+        f"**📊 VISUAL EXAMPLE**\n\n"
+        f"Imagine the total trading volume on Wini Games in 15 days is **$1,000,000**.\n\n"
+        f"**The Reward Pool (10% of Volume):** **$100,000** to be distributed!\n\n"
+        f"• **5% Holder (Whale)** → 5% of $100,000 = **$5,000** 💎\n"
+        f"• **1% Holder (Dolphin)** → 1% of $100,000 = **$1,000** 🐬\n"
+        f"• **0.1% Holder (Fish)** → 0.1% of $100,000 = **$100** 🐟\n\n"
+        f"*Disclaimer: The percentage of volume distributed (5%-20%) will vary based on performance, making every cycle exciting!*\n\n"
+        f"---\n\n"
+        f"**✨ WHY IS THIS ATTRACTIVE?**\n\n"
+        f"• **🚀 Hyper-Deflationary Pressure:** More people will want to hold $WINI to get a piece of the volume pie, reducing circulating supply.\n"
+        f"• **💎 True Utility:** Your tokens aren't just sitting there; they are working for you 24/7.\n"
+        f"• **🎯 Aligned Incentives:** The more the *games* grow (Volume), the more the *holders* earn. We grow together!\n\n"
+        f"---\n\n"
+        f"**📅 MARK YOUR CALENDARS!**\n\n"
+        f"• **Snapshot Day:** Every 14th & 29th (or specific dates announced)\n"
+        f"• **Distribution Day:** Every 15th & 30th (Directly to your wallet)\n\n"
+        f"**Don't get caught without your $WINI!** 🏃‍♂️💨\n\n"
+        f"The next snapshot is coming soon. Make sure your bags are packed! 🧳\n\n"
+        f"**👇 What are you waiting for?**\n"
+        f"👉 **Buy $WINI Now:** [https://winigames.fun/winitoken/]\n"
+        f"👉 **Play & Generate Volume:** [Insert Link Here]\n\n"
+        f"**Let’s grow this ecosystem together! The more we play, the more we all earn!** 🚀🚀🚀\n\n"
+        f"#WiniToken #PassiveIncome #CryptoRewards #PlayToEarn #WiniGames #HODL #Crypto"
+    )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -137,13 +187,36 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 f"💰 Your Balance: **${users_data[user_id].balance}**\n\n"
                 f"🎮 Start playing now!"
             )
+            
+            # Send welcome message
+            await update.message.reply_text(welcome_msg, parse_mode='Markdown')
+            
+            # Send announcement
+            await update.message.reply_text(get_announcement_message(), parse_mode='Markdown')
+            
         else:
-            welcome_msg = f"🎮 Hello {user.first_name}! Play Game With WINI Game"
+            # For non-referred new users
+            welcome_msg = f"🎮 Hello {user.first_name}! 👋 Welcome to WINI Game!"
+            await update.message.reply_text(welcome_msg)
+            
+            # Send the big announcement
+            await update.message.reply_text(get_announcement_message(), parse_mode='Markdown')
         
         # Save data
         save_data(users_data)
+        
     else:
-        welcome_msg = f"🎮 Welcome back {user.first_name}!"
+        # Existing user - show welcome back AND announcement
+        welcome_msg = f"🎮 **Welcome back {user.first_name}!** 🎮\n\n"
+        welcome_msg += f"💰 Your Current Balance: **${users_data[user_id].balance}**\n"
+        welcome_msg += f"🎮 Games Played: **{users_data[user_id].games_played}**\n"
+        welcome_msg += f"👥 Total Referrals: **{users_data[user_id].referral_count}**\n\n"
+        welcome_msg += f"✨ **Check out our latest announcement below!** ✨"
+        
+        await update.message.reply_text(welcome_msg, parse_mode='Markdown')
+        
+        # Send announcement to existing user as well
+        await update.message.reply_text(get_announcement_message(), parse_mode='Markdown')
     
     # Create main menu
     keyboard = [
@@ -154,11 +227,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
+    # Send menu
     await update.message.reply_text(
-        f"{welcome_msg}\n💰 Balance: ${users_data[user_id].balance}",
-        reply_markup=reply_markup
+        f"📱 **Main Menu**\n\nChoose an option below:",
+        reply_markup=reply_markup,
+        parse_mode='Markdown'
     )
 
+# Rest of your code remains exactly the same...
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -280,7 +356,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await query.edit_message_text(
-            f"🎮 Hello {update.effective_user.first_name}!\n💰 Balance: ${user.balance}",
+            f"🎮 **Main Menu**\n\n💰 Balance: **${user.balance}**\n\nChoose an option:",
+            parse_mode='Markdown',
             reply_markup=reply_markup
         )
 
