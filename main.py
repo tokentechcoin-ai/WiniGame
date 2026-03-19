@@ -124,7 +124,7 @@ def get_announcement_message():
         f"The next snapshot is coming soon. Make sure your bags are packed! 🧳\n\n"
         f"**👇 What are you waiting for?**\n"
         f"👉 **Buy $WINI Now:** [https://winigames.fun/winitoken/]\n"
-        f"👉 **Play & Generate Volume:** [Insert Link Here]\n\n"
+        f"👉 **Play & Generate Volume:** [https://winigames.fun]\n\n"
         f"**Let’s grow this ecosystem together! The more we play, the more we all earn!** 🚀🚀🚀\n\n"
         f"#WiniToken #PassiveIncome #CryptoRewards #PlayToEarn #WiniGames #HODL #Crypto"
     )
